@@ -11,6 +11,9 @@ public class Cell {
 
     public void setActualVal(int val){
         actualVal = val;
+        for (int i = 0; i < values.length; i++) {
+            values[i] = 0;
+        }
     }
 
     public void removeValue(int val){
