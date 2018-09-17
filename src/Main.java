@@ -50,6 +50,12 @@ public class Main extends JPanel {
 
                 for (int c = 0; c < sRow.length; c++) {
                     board[r][c].setActualVal(Integer.parseInt(sRow[c]));
+                    if(board[r][c].actualVal > 0){
+                        for (int i = 0; i < 9; i++) {
+                            board[r][c].removePossibleVal(i);
+
+                        }
+                    }
                 }
                 r++;
             }
@@ -58,7 +64,7 @@ public class Main extends JPanel {
         }
     }
 
-    public void verifyRow(int row) {
+    public void removeFromRow(int row) {
         ArrayList<Integer> rowVals = new ArrayList();
 
         for (int col = 0; col < board[0].length; col++) {
@@ -69,42 +75,56 @@ public class Main extends JPanel {
 
         for (int col = 0; col < board[0].length; col++) {
             for (int i = 0; i < rowVals.size(); i++) {
-                board[row][col].removeValue(rowVals.get(i));
+                board[row][col].removePossibleVal(rowVals.get(i) - 1);
             }
         }
     }
 
-    public void verifyCol(int col) {
-        ArrayList<Integer> rowVals = new ArrayList();
+    public void removeFromCol(int col) {
+        ArrayList<Integer> colVals = new ArrayList();
 
         for (int row = 0; row < board.length; row++) {
             if (board[row][col].actualVal > 0) {
-                rowVals.add(board[row][col].actualVal);
+                colVals.add(board[row][col].actualVal);
             }
         }
 
         for (int row = 0; row < board.length; row++) {
-            for (int i = 0; i < rowVals.size(); i++) {
-                board[row][col].removeValue(rowVals.get(i));
+            for (int i = 0; i < colVals.size(); i++) {
+                board[row][col].removePossibleVal(colVals.get(i) - 1);
             }
         }
     }
 
-    public void verifyGroup(int groupRow, int groupCol) {
-        ArrayList<Integer> rowVals = new ArrayList();
+    public void removeFromGroup(int groupRow, int groupCol) {
+        ArrayList<Integer> groupVals = new ArrayList();
 
         for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
             for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
                 if (board[row][col].actualVal > 0) {
-                    rowVals.add(board[row][col].actualVal);
+                    groupVals.add(board[row][col].actualVal);
                 }
             }
         }
 
         for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
             for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-                for (int i = 0; i < rowVals.size(); i++) {
-                    board[row][col].removeValue(rowVals.get(i));
+                for (int i = 0; i < groupVals.size(); i++) {
+                    board[row][col].removePossibleVal(groupVals.get(i) - 1);
+                }
+            }
+        }
+    }
+
+    public void setBoardActualVals(){
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                if(board[row][col].numPossibleValues() == 1){
+                    for (int i = 0; i < 9; i++) {
+                        if(board[row][col].isPossibleVal(i)){
+                            board[row][col].setActualVal(i + 1);
+                        }
+                    }
                 }
             }
         }

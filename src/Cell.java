@@ -16,7 +16,24 @@ public class Cell {
         }
     }
 
-    public void removeValue(int val){
+    public void removePossibleVal(int val){
         values[val] = 0;
+    }
+
+    public int numPossibleValues(){
+        int num = 0;
+        for (int i = 0; i < values.length; i++) {
+            if(values[i] > 0){
+                num++;
+            }
+        }
+        return num;
+    }
+
+    public boolean isPossibleVal(int i){
+        if(values[i] > 0){
+            return true;
+        }
+        return false;
     }
 }
