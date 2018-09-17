@@ -34,8 +34,15 @@ public class Main extends JPanel {
     public void setup() {
         String string;
         String[] sRow;
+        int[] intRow = new int[9];
         board = new Cell[9][9];
         int r;
+
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                board[row][col] = new Cell();
+            }
+        }
 
         file = new File("res/s01a.txt");
 
@@ -46,10 +53,14 @@ public class Main extends JPanel {
             while (scanner.hasNextLine()) {
                 string = scanner.nextLine();
 
-                sRow = string.split("\\s+");
+               sRow = string.split("\\s+");
+                for (int i = 0; i < sRow.length; i++) {
+                    intRow[i] = Integer.valueOf(sRow[i]);
+                }
+
 
                 for (int c = 0; c < sRow.length; c++) {
-                    board[r][c].setActualVal(Integer.parseInt(sRow[c]));
+                    board[r][c].setActualVal(intRow[c]);
                     if(board[r][c].actualVal > 0){
                         for (int i = 0; i < 9; i++) {
                             board[r][c].removePossibleVal(i);
