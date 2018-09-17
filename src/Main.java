@@ -128,7 +128,5 @@ public class Main extends JPanel {
                 }
             }
         }
-        //random messages that have no puposes
-        //there we rgoas
     }
 }
