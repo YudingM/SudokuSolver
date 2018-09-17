@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main extends JPanel {
@@ -9,9 +8,10 @@ public class Main extends JPanel {
     int[][] fileValues;
     File file;
 
-    public Main(int width, int height) {
+    public Main(int width, int height){
         setSize(width, height);
         setup();
+
     }
 
     public static void main(String[] args) {
@@ -30,7 +30,6 @@ public class Main extends JPanel {
         window.setVisible(true);
         window.setResizable(false);
     }
-
     public void setup() {
         String string;
         String[] sRow;
@@ -48,65 +47,13 @@ public class Main extends JPanel {
 
                 sRow = string.split("\\s+");
 
-                for (int c = 0; c < sRow.length; c++) {
-                    board[r][c].setActualVal(Integer.parseInt(sRow[c]));
+                for (int i = 0; i < sRow.length; i++) {
+                    fileValues[r][i] = Integer.parseInt(sRow[i]);
                 }
                 r++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void verifyRow(int row) {
-        ArrayList<Integer> rowVals = new ArrayList();
-
-        for (int col = 0; col < board[0].length; col++) {
-            if (board[row][col].actualVal > 0) {
-                rowVals.add(board[row][col].actualVal);
-            }
-        }
-
-        for (int col = 0; col < board[0].length; col++) {
-            for (int i = 0; i < rowVals.size(); i++) {
-                board[row][col].removeValue(rowVals.get(i));
-            }
-        }
-    }
-
-    public void verifyCol(int col) {
-        ArrayList<Integer> rowVals = new ArrayList();
-
-        for (int row = 0; row < board.length; row++) {
-            if (board[row][col].actualVal > 0) {
-                rowVals.add(board[row][col].actualVal);
-            }
-        }
-
-        for (int row = 0; row < board.length; row++) {
-            for (int i = 0; i < rowVals.size(); i++) {
-                board[row][col].removeValue(rowVals.get(i));
-            }
-        }
-    }
-
-    public void verifyGroup(int groupRow, int groupCol) {
-        ArrayList<Integer> rowVals = new ArrayList();
-
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-                if (board[row][col].actualVal > 0) {
-                    rowVals.add(board[row][col].actualVal);
-                }
-            }
-        }
-
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-                for (int i = 0; i < rowVals.size(); i++) {
-                    board[row][col].removeValue(rowVals.get(i));
-                }
-            }
         }
     }
 }
