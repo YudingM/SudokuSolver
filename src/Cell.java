@@ -19,8 +19,4 @@ public class Cell {
     public void removeValue(int val){
         values[val] = 0;
     }
-
-    public int returnActualVal(){
-        return actualVal;
-    }
 }
