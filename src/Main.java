@@ -114,7 +114,50 @@ public class Main extends JPanel {
                 }
             }
         }
-    }
+
+        int woo = 0;
+
+        int yeet = 0;
+
+        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
+
+            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
+
+                for (int i = 0; i < board[row][col].numPossibleValues(); i++) {
+
+                    woo = board[row][col].getPossibleVal(i);
+
+                        for (int row1 = row + 1; row < groupRow * 3 + 3; row++) {
+
+                            for (int col1 = col + 1; col < groupCol * 3 + 3; col++) {
+
+                                for (int j = 0; j < board[row][col].numPossibleValues(); j++) {
+
+                                    if(woo==board[row1][col1].getPossibleVal(j)) {
+
+                                        yeet = 1;
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        if(yeet == 0) {
+
+                            board[row][col].setActualVal(woo);
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
 
     public void setBoardActualVals(){
         for (int row = 0; row < board.length; row++) {

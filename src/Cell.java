@@ -17,7 +17,15 @@ public class Cell {
     }
 
     public void removePossibleVal(int val){
+
         values[val] = 0;
+
+    }
+
+    public int getPossibleVal(int i) {
+
+        return values[i];
+
     }
 
     public int numPossibleValues(){
