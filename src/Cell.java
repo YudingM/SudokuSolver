@@ -51,16 +51,4 @@ public class Cell {
         }
         return false;
     }
-
-    public boolean hasChanged() {
-
-        return hasChanged;
-
-    }
-
-    public void
-
-        if(Cell.
-
-    }
 }
