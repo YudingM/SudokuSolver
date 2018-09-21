@@ -2,6 +2,7 @@ public class Cell {
 
     int[] values = new int[9];
     int actualVal = 0;
+    boolean hasChanged = false;
 
     public Cell(){
         for(int i = 0; i < values.length; i++){
@@ -49,5 +50,17 @@ public class Cell {
             return true;
         }
         return false;
+    }
+
+    public boolean hasChanged() {
+
+        return hasChanged;
+
+    }
+
+    public void
+
+        if(Cell.
+
     }
 }

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +8,6 @@ import java.util.Scanner;
 
 public class Main extends JPanel {
     Cell[][] board;
-    int[][] fileValues;
     File file;
 
     public Main(int width, int height) {
@@ -30,7 +30,8 @@ public class Main extends JPanel {
 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
-                g2.drawString();
+                g.setFont(new Font("default", Font.ROMAN_BASELINE, 12));
+                g2.drawString(Integer.toString(board[row][col].getActualVal()), row*67 + 30, col*67 + 35);
             }
         }
     }
@@ -239,17 +240,5 @@ public class Main extends JPanel {
 
     }
 
-    public void isSolved() {
-
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-
-
-
-            }
-
-    }
-
 }
 
-//HHHDHJSJHDSJK
