@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -12,6 +13,26 @@ public class Main extends JPanel {
     public Main(int width, int height) {
         setSize(width, height);
         setup();
+    }
+
+    public void paintComponent(Graphics g){
+        Graphics2D g2 = (Graphics2D)g;
+        super.paintComponent(g);
+
+        for (int i = 1; i < 9; i++) {
+            if( i%3 == 0)
+                g2.setStroke(new BasicStroke(3));
+            else
+                g2.setStroke(new BasicStroke(1));
+            g2.drawLine((getWidth()*i)/9, 0, (getWidth()*i)/9, getHeight());
+            g2.drawLine(0, (getHeight()*i)/9, getWidth(), (getHeight()*i)/9);
+        }
+
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                g2.drawString();
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -33,10 +54,11 @@ public class Main extends JPanel {
 
     public void setup() {
         String string;
-        String[] sRow;
+        String[] sRow = new String[9];
         int[] intRow = new int[9];
         board = new Cell[9][9];
-        int r;
+
+            file = new File("res/s01a.txt");
 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
@@ -44,18 +66,18 @@ public class Main extends JPanel {
             }
         }
 
-        file = new File("res/s01a.txt");
-
         try {
             Scanner scanner = new Scanner(file);
-            r = 0;
+            int r = 0;
 
-            while (scanner.hasNextLine()) {
+            while(r < 9) {
                 string = scanner.nextLine();
+                System.out.println(string);
 
-               sRow = string.split("\\s+");
+               sRow = string.trim().split("\\s+");
+
                 for (int i = 0; i < sRow.length; i++) {
-                    intRow[i] = Integer.valueOf(sRow[i]);
+                    intRow[i] = Integer.parseInt(sRow[i]);
                 }
 
 
