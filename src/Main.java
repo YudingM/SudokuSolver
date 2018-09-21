@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +8,6 @@ import java.util.Scanner;
 
 public class Main extends JPanel {
     Cell[][] board;
-    int[][] fileValues;
     File file;
 
     public Main(int width, int height) {
@@ -15,22 +15,23 @@ public class Main extends JPanel {
         setup();
     }
 
-    public void paintComponent(Graphics g){
-        Graphics2D g2 = (Graphics2D)g;
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
         super.paintComponent(g);
 
         for (int i = 1; i < 9; i++) {
-            if( i%3 == 0)
+            if (i % 3 == 0)
                 g2.setStroke(new BasicStroke(3));
             else
                 g2.setStroke(new BasicStroke(1));
-            g2.drawLine((getWidth()*i)/9, 0, (getWidth()*i)/9, getHeight());
-            g2.drawLine(0, (getHeight()*i)/9, getWidth(), (getHeight()*i)/9);
+            g2.drawLine((getWidth() * i) / 9, 0, (getWidth() * i) / 9, getHeight());
+            g2.drawLine(0, (getHeight() * i) / 9, getWidth(), (getHeight() * i) / 9);
         }
 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
-                g2.drawString();
+                g.setFont(new Font("default", Font.ROMAN_BASELINE, 12));
+                g2.drawString(Integer.toString(board[row][col].getActualVal()), row*67 + 30, col*67 + 35);
             }
         }
     }
@@ -58,7 +59,7 @@ public class Main extends JPanel {
         int[] intRow = new int[9];
         board = new Cell[9][9];
 
-            file = new File("res/s01a.txt");
+        file = new File("res/s01a.txt");
 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
@@ -70,11 +71,11 @@ public class Main extends JPanel {
             Scanner scanner = new Scanner(file);
             int r = 0;
 
-            while(r < 9) {
+            while (r < 9) {
                 string = scanner.nextLine();
                 System.out.println(string);
 
-               sRow = string.trim().split("\\s+");
+                sRow = string.trim().split("\\s+");
 
                 for (int i = 0; i < sRow.length; i++) {
                     intRow[i] = Integer.parseInt(sRow[i]);
@@ -83,7 +84,7 @@ public class Main extends JPanel {
 
                 for (int c = 0; c < sRow.length; c++) {
                     board[r][c].setActualVal(intRow[c]);
-                    if(board[r][c].actualVal > 0){
+                    if (board[r][c].getActualVal() > 0) {
                         for (int i = 0; i < 9; i++) {
                             board[r][c].removePossibleVal(i);
 
@@ -101,8 +102,8 @@ public class Main extends JPanel {
         ArrayList<Integer> rowVals = new ArrayList();
 
         for (int col = 0; col < board[0].length; col++) {
-            if (board[row][col].actualVal > 0) {
-                rowVals.add(board[row][col].actualVal);
+            if (board[row][col].getActualVal() > 0) {
+                rowVals.add(board[row][col].getActualVal());
             }
         }
 
@@ -117,8 +118,8 @@ public class Main extends JPanel {
         ArrayList<Integer> colVals = new ArrayList();
 
         for (int row = 0; row < board.length; row++) {
-            if (board[row][col].actualVal > 0) {
-                colVals.add(board[row][col].actualVal);
+            if (board[row][col].getActualVal() > 0) {
+                colVals.add(board[row][col].getActualVal());
             }
         }
 
@@ -134,8 +135,8 @@ public class Main extends JPanel {
 
         for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
             for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-                if (board[row][col].actualVal > 0) {
-                    groupVals.add(board[row][col].actualVal);
+                if (board[row][col].getActualVal() > 0) {
+                    groupVals.add(board[row][col].getActualVal());
                 }
             }
         }
@@ -160,30 +161,28 @@ public class Main extends JPanel {
 
                     woo = board[row][col].getPossibleVal(i);
 
-                        for (int row1 = row + 1; row < groupRow * 3 + 3; row++) {
+                    for (int row1 = row + 1; row < groupRow * 3 + 3; row++) {
 
-                            for (int col1 = col + 1; col < groupCol * 3 + 3; col++) {
+                        for (int col1 = col + 1; col < groupCol * 3 + 3; col++) {
 
-                                for (int j = 0; j < board[row][col].numPossibleValues(); j++) {
+                            for (int j = 0; j < board[row][col].numPossibleValues(); j++) {
 
-                                    if(woo==board[row1][col1].getPossibleVal(j)) {
+                                if (woo == board[row1][col1].getPossibleVal(j)) {
 
-                                        yeet = 1;
-
-                                    }
+                                    yeet = 1;
 
                                 }
 
                             }
 
-
                         }
 
-                        if(yeet == 0) {
 
-                            board[row][col].setActualVal(woo);
+                    }
 
-                        }
+                    if (yeet == 0) {
+
+                        board[row][col].setActualVal(woo);
 
                     }
 
@@ -193,12 +192,14 @@ public class Main extends JPanel {
 
         }
 
-    public void setBoardActualVals(){
+    }
+
+    public void setBoardActualVals() {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
-                if(board[row][col].numPossibleValues() == 1){
+                if (board[row][col].numPossibleValues() == 1) {
                     for (int i = 0; i < 9; i++) {
-                        if(board[row][col].isPossibleVal(i)){
+                        if (board[row][col].isPossibleVal(i)) {
                             board[row][col].setActualVal(i + 1);
                         }
                     }
@@ -217,14 +218,13 @@ public class Main extends JPanel {
 
             for (int j = 0; j < fakeBoard[0].length; j++) {
 
-                if(fakeBoard[i][j].getActualVal() == 0) {
+                if (fakeBoard[i][j].getActualVal() == 0) {
 
                     for (int k = 0; k < fakeBoard[i][j].numPossibleValues(); k++) {
 
                         fakeBoard[i][j].setActualVal(fakeBoard[i][j].getPossibleVal(k));
 
-                        while(i < fakeBoard.length && j< fakeBoard[0].length) {
-
+                        while (i < fakeBoard.length && j < fakeBoard[0].length) {
 
 
                         }
@@ -239,17 +239,45 @@ public class Main extends JPanel {
 
     }
 
-    public void isSolved() {
+    public boolean isSolved(){
+        int rowSum = 0;
+        int colSum = 0;
+        int groupSum = 0;
 
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
-
-
-
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board[0].length; c++) {
+                rowSum += board[r][c].getActualVal();
             }
+            if(rowSum != 45){
+                return false;
+            }
+            rowSum = 0;
+        }
 
+        for (int c = 0; c < board.length; c++) {
+            for (int r = 0; r < board[0].length; r++) {
+                colSum += board[r][c].getActualVal();
+            }
+            if(colSum != 45){
+                return false;
+            }
+            colSum = 0;
+        }
+
+        for(int groupRow = 0; groupRow < 3; groupRow++){
+            for (int groupCol = 0; groupCol < 3; groupCol++) {
+                for (int smallRow = 0; smallRow < 3; smallRow++) {
+                    for (int smallCol = 0; smallCol < 3; smallCol++) {
+                        groupSum += board[groupRow * 3 + smallRow][groupCol * 3 + smallCol].getActualVal();
+                    }
+                }
+                if(groupSum != 45){
+                    return false;
+                }
+                groupSum = 0;
+            }
+        }
+
+        return true;
     }
-
 }
-
-//HHHDHJSJHDSJK
