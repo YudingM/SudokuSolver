@@ -16,6 +16,12 @@ public class Cell {
         }
     }
 
+    public int getActualVal() {
+
+       return actualVal;
+
+    }
+
     public void removePossibleVal(int val){
 
         values[val] = 0;

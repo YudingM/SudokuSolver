@@ -172,4 +172,48 @@ public class Main extends JPanel {
             }
         }
     }
+
+    public void tryEverything() {
+
+        Cell[][] fakeBoard;
+
+        fakeBoard = board;
+
+        for (int i = 0; i < fakeBoard.length; i++) {
+
+            for (int j = 0; j < fakeBoard[0].length; j++) {
+
+                if(fakeBoard[i][j].getActualVal() == 0) {
+
+                    for (int k = 0; k < fakeBoard[i][j].numPossibleValues(); k++) {
+
+                        fakeBoard[i][j].setActualVal(fakeBoard[i][j].getPossibleVal(k));
+
+                        while(i < fakeBoard.length && j< fakeBoard[0].length) {
+
+
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public void isSolved() {
+
+        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
+            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
+
+
+
+            }
+
+    }
+
 }
