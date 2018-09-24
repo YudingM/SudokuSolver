@@ -16,13 +16,9 @@ public class Main extends JPanel {
         for (int i = 0; i < board.length; i++) {
 
             for (int j = 0; j < board[0].length; j++) {
-
-                removeFromGroup(i, j);
-
                 removeFromRow(i);
-
                 removeFromCol(j);
-
+                removeFromGroup(i, j);
             }
 
         }
@@ -143,19 +139,22 @@ public class Main extends JPanel {
         }
     }
 
-    public void removeFromGroup(int groupRow, int groupCol) {
+    public void removeFromGroup(int row, int col) {
         ArrayList<Integer> groupVals = new ArrayList();
 
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
+        int groupRow = row/3;
+        int groupCol = col/3;
+
+        for (int r = groupRow * 3; r < groupRow*3 + 3; r++) {
+            for (int c = groupCol * 3; c < groupCol*3 + 3; c++) {
                 if (board[row][col].getActualVal() > 0) {
                     groupVals.add(board[row][col].getActualVal());
                 }
             }
         }
 
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
+        for (int r = groupRow * 3; r < 9; r++) {
+            for (int c = groupCol * 3; c < 9; c++) {
                 for (int i = 0; i < groupVals.size(); i++) {
                     board[row][col].removePossibleVal(groupVals.get(i) - 1);
                 }
@@ -166,21 +165,21 @@ public class Main extends JPanel {
 
         int yeet = 0;
 
-        for (int row = groupRow * 3; row < groupRow * 3 + 3; row++) {
+        for (int r = groupRow * 3; r < groupRow * 3 + 3; r++) {
 
-            for (int col = groupCol * 3; col < groupCol * 3 + 3; col++) {
+            for (int c = groupCol * 3; c < groupCol * 3 + 3; c++) {
 
                 for (int i = 0; i < board[row][col].numPossibleValues(); i++) {
 
                     woo = board[row][col].getPossibleVal(i);
 
-                    for (int row1 = row + 1; row < groupRow * 3 + 3; row++) {
+                    for (int r1 = r + 1; r1 < groupRow * 3 + 3; r1++) {
 
-                        for (int col1 = col + 1; col < groupCol * 3 + 3; col++) {
+                        for (int c1 = c + 1; c1 < groupCol * 3 + 3; c1++) {
 
                             for (int j = 0; j < board[row][col].numPossibleValues(); j++) {
 
-                                if (woo == board[row1][col1].getPossibleVal(j)) {
+                                if (woo == board[r1][c1].getPossibleVal(j)) {
 
                                     yeet = 1;
 
@@ -294,4 +293,3 @@ public class Main extends JPanel {
         return true;
     }
 }
-//delete this comment
