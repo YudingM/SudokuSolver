@@ -2,7 +2,6 @@ public class Cell {
 
     int[] values = new int[9];
     int actualVal = 0;
-    boolean hasChanged = false;
 
     public Cell(){
         for(int i = 0; i < values.length; i++){
@@ -12,7 +11,10 @@ public class Cell {
 
     public void setActualVal(int val){
         actualVal = val;
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < val; i++) {
+            values[i] = 0;
+        }
+        for (int i = val; i < values.length; i++) {
             values[i] = 0;
         }
     }

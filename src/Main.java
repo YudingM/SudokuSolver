@@ -13,15 +13,18 @@ public class Main extends JPanel {
     public Main(int width, int height) {
         setSize(width, height);
         setup();
+        printBoard();
         for (int i = 0; i < board.length; i++) {
-
-            for (int j = 0; j < board[0].length; j++) {
-                removeFromRow(i);
-                removeFromCol(j);
-                removeFromGroup(i, j);
-            }
-
+            removePossibleFromRow(i);
+//            for (int j = 0; j < board[0].length; j++) {
+//                removePossibleFromCol(j);
+//                removePossibleFromGroup(i, j);
+//            }
         }
+        setBoardActualVals();
+
+        System.out.println();
+        printBoard();
     }
 
     public void paintComponent(Graphics g) {
@@ -40,7 +43,7 @@ public class Main extends JPanel {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
                 g.setFont(new Font("default", Font.ROMAN_BASELINE, 12));
-                g2.drawString(Integer.toString(board[row][col].getActualVal()), row*67 + 30, col*67 + 35);
+                g2.drawString(Integer.toString(board[row][col].getActualVal()), col*67 + 30, row*67 + 35);
             }
         }
     }
@@ -82,7 +85,6 @@ public class Main extends JPanel {
 
             while (r < 9) {
                 string = scanner.nextLine();
-                System.out.println(string);
 
                 sRow = string.trim().split("\\s+");
 
@@ -107,7 +109,7 @@ public class Main extends JPanel {
         }
     }
 
-    public void removeFromRow(int row) {
+    public void removePossibleFromRow(int row) {
         ArrayList<Integer> rowVals = new ArrayList();
 
         for (int col = 0; col < board[0].length; col++) {
@@ -123,7 +125,7 @@ public class Main extends JPanel {
         }
     }
 
-    public void removeFromCol(int col) {
+    public void removePossibleFromCol(int col) {
         ArrayList<Integer> colVals = new ArrayList();
 
         for (int row = 0; row < board.length; row++) {
@@ -139,7 +141,7 @@ public class Main extends JPanel {
         }
     }
 
-    public void removeFromGroup(int row, int col) {
+    public void removePossibleFromGroup(int row, int col) {
         ArrayList<Integer> groupVals = new ArrayList();
 
         int groupRow = row/3;
@@ -291,5 +293,14 @@ public class Main extends JPanel {
         }
 
         return true;
+    }
+
+    public void printBoard(){
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board[0].length; c++) {
+                System.out.print(board[r][c].getActualVal());
+            }
+            System.out.println();
+        }
     }
 }
