@@ -1,30 +1,49 @@
 import javax.swing.*;
-import javax.swing.text.StyledEditorKit;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main extends JPanel {
-    Cell[][] board;
-    File file;
+    public static Cell[][] board;
+    public static File file;
+    public Timer timer;
 
     public Main(int width, int height) {
         setSize(width, height);
         setup();
         printBoard();
-        for (int i = 0; i < board.length; i++) {
-            removePossibleFromRow(i);
-//            for (int j = 0; j < board[0].length; j++) {
-//                removePossibleFromCol(j);
-//                removePossibleFromGroup(i, j);
-//            }
-        }
-        setBoardActualVals();
 
         System.out.println();
         printBoard();
+
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                for (int i = 0; i < board.length; i++) {
+                    removePossibleFromRow(i);
+                    for (int j = 0; j < board[0].length; j++) {
+                        removePossibleFromCol(j);
+                        removePossibleFromGroup(i, j);
+                        setBoardActualVals();
+
+                        if(board[i][j].numPossibleValues() == 0){
+                            System.out.println("no value at "+ i + "and "+ j);
+                        }
+                    }
+                }
+                repaint();
+                printBoard();
+
+                if(isSolved()){
+                    timer.stop();
+                }
+            }
+        });
+        timer.start();
     }
 
     public void paintComponent(Graphics g) {
@@ -63,11 +82,12 @@ public class Main extends JPanel {
         window.add(panel);
         window.setVisible(true);
         window.setResizable(false);
+
     }
 
     public void setup() {
         String string;
-        String[] sRow = new String[9];
+        String[] sRow;
         int[] intRow = new int[9];
         board = new Cell[9][9];
 
@@ -76,6 +96,13 @@ public class Main extends JPanel {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
                 board[row][col] = new Cell();
+
+                if(board[row][col].numPossibleValues() == 0){
+                    System.out.println("no value at "+ row + " and "+ col);
+                }
+                else{
+                    System.out.println("we're good");
+                }
             }
         }
 
@@ -92,15 +119,8 @@ public class Main extends JPanel {
                     intRow[i] = Integer.parseInt(sRow[i]);
                 }
 
-
                 for (int c = 0; c < sRow.length; c++) {
                     board[r][c].setActualVal(intRow[c]);
-                    if (board[r][c].getActualVal() > 0) {
-                        for (int i = 0; i < 9; i++) {
-                            board[r][c].removePossibleVal(i);
-
-                        }
-                    }
                 }
                 r++;
             }
@@ -111,6 +131,7 @@ public class Main extends JPanel {
 
     public void removePossibleFromRow(int row) {
         ArrayList<Integer> rowVals = new ArrayList();
+        int[] possibleVals = new int[9];
 
         for (int col = 0; col < board[0].length; col++) {
             if (board[row][col].getActualVal() > 0) {
@@ -119,14 +140,31 @@ public class Main extends JPanel {
         }
 
         for (int col = 0; col < board[0].length; col++) {
-            for (int i = 0; i < rowVals.size(); i++) {
-                board[row][col].removePossibleVal(rowVals.get(i) - 1);
+            for (int i: rowVals) {
+                board[row][col].removePossibleVal(i);
+            }
+
+            for (int i = 0; i < possibleVals.length; i++) {
+                if(board[row][col].getPossibleVal(i) > 0){
+                    possibleVals[i]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < possibleVals.length; i++) {
+            if (possibleVals[i] == 1) {
+                for (int col = 0; col < board.length; col++) {
+                    if (board[row][col].getPossibleVal(i) > 0) {
+                        board[row][col].setActualVal(i + 1);
+                    }
+                }
             }
         }
     }
 
     public void removePossibleFromCol(int col) {
         ArrayList<Integer> colVals = new ArrayList();
+        int[] possibleVals = new int[9];
 
         for (int row = 0; row < board.length; row++) {
             if (board[row][col].getActualVal() > 0) {
@@ -135,14 +173,31 @@ public class Main extends JPanel {
         }
 
         for (int row = 0; row < board.length; row++) {
-            for (int i = 0; i < colVals.size(); i++) {
-                board[row][col].removePossibleVal(colVals.get(i) - 1);
+            for (int i: colVals) {
+                board[row][col].removePossibleVal(i);
+            }
+
+            for (int i = 0; i < possibleVals.length; i++) {
+                if(board[row][col].getPossibleVal(i) > 0){
+                    possibleVals[i]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < possibleVals.length; i++) {
+            if (possibleVals[i] == 1) {
+                for (int row = 0; row < board.length; row++) {
+                    if (board[row][col].getPossibleVal(i) > 0) {
+                        board[row][col].setActualVal(i + 1);
+                    }
+                }
             }
         }
     }
 
     public void removePossibleFromGroup(int row, int col) {
         ArrayList<Integer> groupVals = new ArrayList();
+        int[] possibleVals = new int[9];
 
         int groupRow = row/3;
         int groupCol = col/3;
@@ -155,103 +210,75 @@ public class Main extends JPanel {
             }
         }
 
-        for (int r = groupRow * 3; r < 9; r++) {
-            for (int c = groupCol * 3; c < 9; c++) {
-                for (int i = 0; i < groupVals.size(); i++) {
-                    board[row][col].removePossibleVal(groupVals.get(i) - 1);
+        for (int r = groupRow * 3; r < groupRow*3 + 3; r++) {
+            for (int c = groupCol * 3; c < groupCol*3 + 3; c++) {
+                for (int i: groupVals) {
+                    board[row][col].removePossibleVal(i);
+                }
+
+                for (int i = 0; i < possibleVals.length; i++) {
+                    if(board[row][col].getPossibleVal(i) > 0){
+                        possibleVals[i]++;
+                    }
                 }
             }
         }
-
-        int woo = 0;
-
-        int yeet = 0;
-
-        for (int r = groupRow * 3; r < groupRow * 3 + 3; r++) {
-
-            for (int c = groupCol * 3; c < groupCol * 3 + 3; c++) {
-
-                for (int i = 0; i < board[row][col].numPossibleValues(); i++) {
-
-                    woo = board[row][col].getPossibleVal(i);
-
-                    for (int r1 = r + 1; r1 < groupRow * 3 + 3; r1++) {
-
-                        for (int c1 = c + 1; c1 < groupCol * 3 + 3; c1++) {
-
-                            for (int j = 0; j < board[row][col].numPossibleValues(); j++) {
-
-                                if (woo == board[r1][c1].getPossibleVal(j)) {
-
-                                    yeet = 1;
-
-                                }
-
-                            }
-
+        for (int i = 0; i < possibleVals.length; i++) {
+            if (possibleVals[i] == 1) {
+                for (int r = groupRow*3; r < groupRow*3 + 3; r++) {
+                    for (int c = groupCol*3; c < groupCol*3 + 3; c++) {
+                        if (board[r][c].getPossibleVal(i) > 0) {
+                            board[r][c].setActualVal(i + 1);
                         }
-
-
                     }
-
-                    if (yeet == 0) {
-
-                        board[row][col].setActualVal(woo);
-
-                    }
-
                 }
-
             }
-
         }
-
     }
+
+
 
     public void setBoardActualVals() {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
                 if (board[row][col].numPossibleValues() == 1) {
-                    for (int i = 0; i < 9; i++) {
-                        if (board[row][col].isPossibleVal(i)) {
-                            board[row][col].setActualVal(i + 1);
-                        }
-                    }
+                    System.out.println("onePos at " + row + col);
+                    board[row][col].setOnlyPossibleVal();
                 }
             }
         }
     }
 
-    public void tryEverything() {
-
-        Cell[][] fakeBoard;
-
-        fakeBoard = board;
-
-        for (int i = 0; i < fakeBoard.length; i++) {
-
-            for (int j = 0; j < fakeBoard[0].length; j++) {
-
-                if (fakeBoard[i][j].getActualVal() == 0) {
-
-                    for (int k = 0; k < fakeBoard[i][j].numPossibleValues(); k++) {
-
-                        fakeBoard[i][j].setActualVal(fakeBoard[i][j].getPossibleVal(k));
-
-                        while (i < fakeBoard.length && j < fakeBoard[0].length) {
-
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
+//    public void tryEverything() {
+//
+//        Cell[][] fakeBoard;
+//
+//        fakeBoard = board;
+//
+//        for (int i = 0; i < fakeBoard.length; i++) {
+//
+//            for (int j = 0; j < fakeBoard[0].length; j++) {
+//
+//                if (fakeBoard[i][j].getActualVal() == 0) {
+//
+//                    for (int k = 0; k < fakeBoard[i][j].numPossibleValues(); k++) {
+//
+//                        fakeBoard[i][j].setActualVal(fakeBoard[i][j].getPossibleVal(k));
+//
+//                        while (i < fakeBoard.length && j < fakeBoard[0].length) {
+//
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
 
     public boolean isSolved(){
         int rowSum = 0;

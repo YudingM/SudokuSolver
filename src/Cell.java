@@ -1,7 +1,7 @@
 public class Cell {
 
-    int[] values = new int[9];
-    int actualVal = 0;
+    private int[] values = new int[9];
+    private int actualVal = 0;
 
     public Cell(){
         for(int i = 0; i < values.length; i++){
@@ -10,12 +10,17 @@ public class Cell {
     }
 
     public void setActualVal(int val){
-        actualVal = val;
-        for (int i = 0; i < val; i++) {
-            values[i] = 0;
+        if(val == 0){
+            actualVal = 0;
         }
-        for (int i = val; i < values.length; i++) {
-            values[i] = 0;
+        else {
+            actualVal = val;
+            for (int i = 0; i < val - 1; i++) {
+                values[i] = 0;
+            }
+            for (int i = val; i < values.length; i++) {
+                values[i] = 0;
+            }
         }
     }
 
@@ -26,32 +31,34 @@ public class Cell {
     }
 
     public void removePossibleVal(int val){
-
-        values[val] = 0;
-
+        if(val == actualVal)
+            values[val - 1] = 1;
+        else
+            values[val - 1] = 0;
     }
 
-    public int getPossibleVal(int i) {
+    public int numPossibleValues() {
+        int sum = 0;
 
+        for(int i: values){
+            if(i == 1)
+               sum++;
+        }
+        return sum;
+    }
+
+
+    public int getPossibleVal(int i){
         return values[i];
-
     }
 
-    public int numPossibleValues(){
-        int num = 0;
+    public void setOnlyPossibleVal(){
         for (int i = 0; i < values.length; i++) {
-            if(values[i] > 0){
-                num++;
+            if(values[i] > 1){
+                setActualVal(i + 1);
             }
         }
-        return num;
-    }
 
-    public boolean isPossibleVal(int i){
-        if(values[i] > 0){
-            return true;
-        }
-        return false;
     }
 
 }
